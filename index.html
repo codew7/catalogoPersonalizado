@@ -12,9 +12,9 @@
     <script>
         
         // Función para obtener parámetros de la URL
-        function getUrlParameter(name) {
+        function getUrlParameter(n) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            return urlParams.get(n);
         }
         
         // Función para extraer el porcentaje del final de la URL
@@ -29,7 +29,7 @@
         }
         
         // Obtener el nombre personalizado de la URL
-        const customName = getUrlParameter('name') || 'Catálogo';
+        const customName = getUrlParameter('n') || 'Catálogo';
         
         // Obtener el porcentaje de incremento
         const porcentajeIncremento = getPorcentajeFromUrl();
@@ -475,7 +475,7 @@
           width: 60px;
           height: 60px;
           border: 6px solid #f3f3f3;
-          border-top: 6px solid #1976D2;
+          border-top: 6px solid #b50b9e;
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 25px;
