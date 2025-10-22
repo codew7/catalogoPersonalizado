@@ -50,6 +50,12 @@
             if (customName !== 'Catálogo') {
                 document.title = `Catálogo - ${customName}`;
             }
+            
+            // Actualizar el nombre del catálogo en el pie de página
+            const footerCatalogName = document.getElementById('footer-catalog-name');
+            if (footerCatalogName) {
+                footerCatalogName.textContent = customName;
+            }
         });
     </script>
 
@@ -573,6 +579,11 @@
         <button id="next-btn" style="position: absolute; right: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#777777; display:none;">&#10095;</button>
     </div>
 
+    <!-- Pie de página -->
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; background-color: var(--color-card); color: var(--color-text-light); font-size: 14px; border-top: 1px solid var(--color-border);">
+        <p style="margin: 0;">© Catálogo <span id="footer-catalog-name"></span> 2025 - v1.02</p>
+    </footer>
+
     <!-- Contenedor del catálogo -->
 
     <script>
@@ -817,26 +828,26 @@
                 }
                 card.appendChild(stockInfo);
 
-                // 5. Valor $ (con incremento si corresponde)
-                const valorPesos = document.createElement('p');
-                
-                // Limpiar el precio original eliminando comas y convirtiendo a número
-                let precioString = item[6] || '0';
-                // Remover comas que actúan como separadores de miles
-                let precioOriginal = parseFloat(precioString.toString().replace(/,/g, '')) || 0;
-                let precioFinal = precioOriginal;
-                
-                // Aplicar porcentaje de incremento si existe
+                // 5. Valor $ (con incremento si corresponde) - Solo mostrar si hay porcentaje
                 if (porcentajeIncremento > 0) {
+                    const valorPesos = document.createElement('p');
+                    
+                    // Limpiar el precio original eliminando comas y convirtiendo a número
+                    let precioString = item[6] || '0';
+                    // Remover comas que actúan como separadores de miles
+                    let precioOriginal = parseFloat(precioString.toString().replace(/,/g, '')) || 0;
+                    let precioFinal = precioOriginal;
+                    
+                    // Aplicar porcentaje de incremento
                     precioFinal = precioOriginal * (1 + porcentajeIncremento / 100);
+                    
+                    // Redondear el precio a número entero
+                    precioFinal = Math.round(precioFinal);
+                    
+                    valorPesos.innerHTML = `<strong>Precio $</strong> ${precioFinal.toLocaleString('es-AR')}`;
+                    valorPesos.style.marginTop = '2px';
+                    card.appendChild(valorPesos);
                 }
-                
-                // Redondear el precio a número entero
-                precioFinal = Math.round(precioFinal);
-                
-                valorPesos.innerHTML = `<strong>Precio $</strong> ${precioFinal.toLocaleString('es-AR')}`;
-                valorPesos.style.marginTop = '2px';
-                card.appendChild(valorPesos);
 
                 card.appendChild(stockInfo);
                 grid.appendChild(card);
