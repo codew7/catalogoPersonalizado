@@ -83,7 +83,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -90%);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -92,7 +92,7 @@
         width: 90%;
     }
     .header-content-mobile .mayorista-text {
-    font-size: 40px !important;
+    font-size: 45px !important;
     margin: 0 !important;
     text-align: center !important;
     font-weight: 700;
@@ -118,7 +118,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -55%);
         display: flex !important;
         flex-direction: column;
         align-items: center;
@@ -126,7 +126,7 @@
         width: 100%;
     }
     .header-content-desktop .mayorista-text {
-    font-size: 40px;
+    font-size: 50px;
     margin: 0;
     text-align: center;
     font-weight: 700;
@@ -516,22 +516,44 @@
 
 <body>
 
-<header style="display: flex; flex-direction: column; align-items: center; padding: 10px; background-color: #44484c; width: 90%; margin: 0 auto; border-radius: 10px;">
-    <div style="position: relative; width: 100%; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+<header style="display: flex; flex-direction: column; align-items: center; padding: 5px; background-color: #44484c; width: 90%; margin: 0 auto; border-radius: 10px;">
+    <div style="position: relative; width: 100%; min-height: 100px; display: flex; align-items: center; justify-content: center; background: linear-gradient(270deg, #44484c, #b50b9e, #44484c); background-size: 600% 600%; animation: header-gradient 8s ease-in-out infinite; border-radius: 10px;">
         <!-- Superposición: animación y texto centrados -->
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -70%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
             <svg class="header-wave" style="position:absolute;top:70%;left:50%;transform:translate(-50%,-50%);width:80%;height:80px;z-index:0;pointer-events:none;" viewBox="0 0 400 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 30 Q100 60 200 30 T400 30" stroke="#b50b9e" stroke-width="2" fill="none">
                     <animate attributeName="d" dur="3s" repeatCount="indefinite"
                         values="M0 30 Q100 60 200 30 T400 30; M0 35 Q100 55 200 35 T400 35; M0 30 Q100 60 200 30 T400 30" />
                 </path>
             </svg>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index:1;">
+            <!-- Segunda onda SVG animada -->
+            <svg class="header-wave" style="position:absolute;top:90%;left:50%;transform:translate(-50%,-60%);width:80%;height:40px;z-index:0;pointer-events:none;" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 20 Q100 40 200 20 T400 20" stroke="#ce0db4" stroke-width="2" fill="none">
+                    <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
+                        values="M0 20 Q100 40 200 20 T400 20; M0 25 Q100 35 200 25 T400 25; M0 20 Q100 40 200 20 T400 20" />
+                </path>
+            </svg>
+            <div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index:1;">
                 <div class="header-content-mobile">
-                    <div class="mayorista-text">Distribuidora Mayorista</div>
+                    <div class="mayorista-text pulse-text">Catalogo</div>
                 </div>
                 <div class="header-content-desktop">
-                    <div class="mayorista-text">Distribuidora Mayorista</div>
+                    <div class="mayorista-text pulse-text">Catalogo</div>
+                    
+            @keyframes header-gradient {
+                0% {background-position: 0% 50%;}
+                50% {background-position: 100% 50%;}
+                100% {background-position: 0% 50%;}
+            }
+
+            .pulse-text {
+                animation: pulse 1.8s infinite;
+            }
+            @keyframes pulse {
+                0% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
+                50% { text-shadow: 0 0 24px #ce0db4, 0 0 8px #fff; }
+                100% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
+            }
                 </div>
             </div>
         </div>
