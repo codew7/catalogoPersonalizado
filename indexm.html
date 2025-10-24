@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="2.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="faviconnegro.png" type="image/png">
+    
+    <title>Catálogo</title>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="configm.js"></script>
+    <script src="indexm.js" defer></script>
+    
+    <style>
+        /* Variables de colores - Paleta minimalista */
+        :root {
+            --color-primary: #44484c;
+            --color-secondary: #7a7e82;
+            --color-accent: #b0b3b8;
+            --color-success: #a3a6a9;
+            --color-warning: #d3d3d3;
+            --color-background: #f5f5f5;
+            --color-card: #f0f0f0;
+            --color-text: #44484c;
+            --color-text-light: #a0a0a0;
+            --color-border: #cccccc;
+        }
+
+@media (max-width: 600px) {
+    .header-content-mobile {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -90%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        width: 90%;
+    }
+    .header-content-mobile .mayorista-text {
+    font-size: 45px !important;
+    margin: 0 !important;
+    text-align: center !important;
+    font-weight: 700;
+    background: linear-gradient(90deg, #c3c5c7, #f8f8f8);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: mayorista-gradient 6s ease-in-out infinite;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .header-content-desktop {
+        display: none !important;
+    }
+}
+
+@media (min-width: 601px) {
+    .header-content-mobile {
+        display: none !important;
+    }
+    .header-content-desktop {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -55%);
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+    .header-content-desktop .mayorista-text {
+    font-size: 50px;
+    margin: 0;
+    text-align: center;
+    font-weight: 700;
+    background: linear-gradient(90deg, #c3c5c7, #f8f8f8);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: mayorista-gradient 6s ease-in-out infinite;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+@keyframes mayorista-gradient {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+    }
+}
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        header { 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: var(--color-card);
+            color: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: header-move 3s ease-in-out infinite alternate;
+
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 13px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px auto;
+            max-width: 90%;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .controls {
+            gap: 15px;
+        }
+        
+        #row-categorias {
+            order: 1;
+        }
+        
+        #row-buscar {
+            order: 2;
+        }
+        
+        #row-filtros {
+            order: 3;
+            justify-content: space-between;
+        }
+        
+        #row-categorias select {
+            width: 100%;
+        }
+        
+        #row-buscar input {
+            width: 100%;
+        }
+        
+        #row-filtros button {
+            flex: 1;
+            margin-left: 0 !important;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        select, input, button {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        select, input {
+            width: 60%;
+        }
+
+        select {
+            width: 65%;
+        }
+
+        input {
+            width: 75%;
+        }
+
+        button {
+            width: 30%;
+            background-color: #a3a6a9;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #7a7e82;
+        }
+
+        .grid {
+            display: grid;
+            gap: 10px;
+            padding: 14px;
+            justify-content: center;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+       .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card img {
+            max-width: 100%;
+            max-height: 180px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            object-fit: contain; /* Mantiene la relación de aspecto */
+        }
+
+        .card img:hover {
+            transform: scale(1.1);
+        }
+
+        .card .info {
+            display: flex;
+            justify-content: center;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        .card h3 {
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .lightbox img {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .lightbox:target {
+            display: flex;
+        }
+
+        .lightbox .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+
+        .pagination-button {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            background-color: #44484c;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-button:hover {
+            background-color: #ce0db4;
+            color: white;
+        }
+
+        .pagination-button.active {
+            background-color: #ce0db4;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            cursor: default;
+        }
+
+        .modal{
+            position:fixed;inset:0;
+            background:rgba(0,0,0,.6);
+            display:none;                /* se muestra con JS */
+            justify-content:center;align-items:center;
+            z-index:3000;
+        }
+
+        .modal-content{
+            background:#fff;padding:20px;border-radius:8px;max-width:400px;width:90%;
+            box-shadow:0 2px 6px rgba(0,0,0,.3);text-align:center
+        }
+
+        .modal-content input{
+            width:100%;padding:8px;margin:6px 0;box-sizing:border-box
+        }
+
+        .modal-content button{
+            background:#1976D2;color:#fff;border:none;padding:10px 20px;border-radius:5px;
+            cursor:pointer;margin-top:10px
+        }
+
+        .stock-info {
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .stock-info span {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .stock-info span[style*="color: #4CAF50"] {
+            background-color: #d4e6d5;
+            border: 1px solid #4CAF50;
+        }
+
+        .stock-info span[style*="color: #f44336"] {
+            background-color: #ffeaea;
+            border: 1px solid #f44336;
+        }
+
+        .stock-info span[style*="color: #ff9800"] {
+            background-color: #fff3e0;
+            border: 1px solid #ff9800;
+        }
+
+        .stock-info span[style*="color: #ffeb3b"] {
+            background-color: #fffde7;
+            border: 1px solid #ebd726;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Estilos para el mensaje de carga profesional */
+        #loadingOverlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.95);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          flex-direction: column;
+        }
+
+        .loading-spinner {
+          width: 60px;
+          height: 60px;
+          border: 6px solid #f3f3f3;
+          border-top: 6px solid #b50b9e;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 25px;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-text {
+          font-size: 1.4em;
+          color: #333;
+          font-weight: 600;
+          margin-bottom: 12px;
+        }
+
+        .loading-subtext {
+          font-size: 1em;
+          color: #666;
+          text-align: center;
+          max-width: 350px;
+          line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+<header style="display: flex; flex-direction: column; align-items: center; padding: 5px; background-color: #44484c; width: 90%; margin: 0 auto; border-radius: 10px;">
+    <div style="position: relative; width: 100%; min-height: 100px; display: flex; align-items: center; justify-content: center; background: linear-gradient(270deg, #44484c, #b50b9e, #44484c); background-size: 600% 600%; animation: header-gradient 8s ease-in-out infinite; border-radius: 10px;">
+        <!-- Superposición: animación y texto centrados -->
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -70%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+            <svg class="header-wave" style="position:absolute;top:70%;left:50%;transform:translate(-50%,-50%);width:80%;height:80px;z-index:0;pointer-events:none;" viewBox="0 0 400 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 30 Q100 60 200 30 T400 30" stroke="#b50b9e" stroke-width="2" fill="none">
+                    <animate attributeName="d" dur="3s" repeatCount="indefinite"
+                        values="M0 30 Q100 60 200 30 T400 30; M0 35 Q100 55 200 35 T400 35; M0 30 Q100 60 200 30 T400 30" />
+                </path>
+            </svg>
+            <!-- Segunda onda SVG animada -->
+            <svg class="header-wave" style="position:absolute;top:90%;left:50%;transform:translate(-50%,-60%);width:80%;height:40px;z-index:0;pointer-events:none;" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 20 Q100 40 200 20 T400 20" stroke="#ce0db4" stroke-width="2" fill="none">
+                    <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
+                        values="M0 20 Q100 40 200 20 T400 20; M0 25 Q100 35 200 25 T400 25; M0 20 Q100 40 200 20 T400 20" />
+                </path>
+            </svg>
+            <div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index:1;">
+                <div class="header-content-mobile">
+                    <div class="mayorista-text pulse-text">Catalogo</div>
+                </div>
+                <div class="header-content-desktop">
+                    <div class="mayorista-text pulse-text">Catalogo</div>
+                    
+            @keyframes header-gradient {
+                0% {background-position: 0% 50%;}
+                50% {background-position: 100% 50%;}
+                100% {background-position: 0% 50%;}
+            }
+
+            .pulse-text {
+                animation: pulse 1.8s infinite;
+            }
+            @keyframes pulse {
+                0% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
+                50% { text-shadow: 0 0 24px #ce0db4, 0 0 8px #fff; }
+                100% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
+            }
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; width: 100%; justify-content: center; align-items: center; margin-top: 10px; position: relative; gap: 10px; z-index:2;">
+        </div>
+    </div>
+</header>
+
+    <!-- Overlay de carga profesional -->
+    <div id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Cargando catálogo...</div>
+        <div class="loading-subtext">Por favor, espere mientras se cargan los productos desde el servidor</div>
+    </div>
+
+    <div class="controls">
+        <div class="controls-row" id="row-categorias">
+            <select id="categorias">
+                <option value="todos">Todas las categorías</option>
+            </select>
+        </div>
+        <div class="controls-row" id="row-buscar">
+            <input type="text" id="buscar" placeholder="Buscar artículo..." style="width: 100%;">
+        </div>
+        <div class="controls-row" id="row-filtros">
+            <button id="todos" style="margin-left: 0; width: 100%;">Limpiar Filtro</button>
+        </div>
+    </div>
+
+    <p id="error" style="text-align: center; color: red; font-weight: bold;"></p>
+
+    <div class="grid" id="catalogo">
+        <!-- Los datos se cargarán aquí -->
+    </div>
+
+    <div class="pagination" id="pagination">
+        <!-- Controles de paginación -->
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <span class="close" onclick="closeLightbox(event)">x</span>
+        <button id="prev-btn" style="position: absolute; left: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#777777; display:none;">&#10094;</button>
+        <img id="lightbox-img" src="" alt="Imagen ampliada">
+        <div id="lightbox-value" style="color: white; font-size: 1.5em; text-align: center; margin-top: 10px;"></div>
+        <button id="next-btn" style="position: absolute; right: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#777777; display:none;">&#10095;</button>
+    </div>
+
+    <!-- Pie de página -->
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; background-color: var(--color-card); color: var(--color-text-light); font-size: 14px; border-top: 1px solid var(--color-border);">
+        <p style="margin: 0;">© Catálogo <span id="footer-catalog-name"></span> 2025 - v1.02</p>
+    </footer>
+
+</body>
+</html>
