@@ -7,12 +7,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="faviconnegro.png" type="image/png">
     
-    <title>Catálogo</title>
+    <title>Catálogo_</title>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <script src="configm.js"></script>
     <script src="indexm.js" defer></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4KVPQ6RYRQ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4KVPQ6RYRQ');
+    </script>
     
     <style>
         /* Variables de colores - Paleta minimalista */
@@ -118,7 +128,11 @@
             position: relative;
             overflow: hidden;
             animation: header-move 3s ease-in-out infinite alternate;
-
+@keyframes header-move {
+    0% { box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(0); }
+    50% { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(4px); }
+    100% { box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(0); }
+}
         }
 
         header h1 {
@@ -496,6 +510,7 @@
             .pulse-text {
                 animation: pulse 1.8s infinite;
             }
+            
             @keyframes pulse {
                 0% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
                 50% { text-shadow: 0 0 24px #ce0db4, 0 0 8px #fff; }
