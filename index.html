@@ -472,6 +472,139 @@
           max-width: 350px;
           line-height: 1.5;
         }
+
+        /* Estilos para el modal de notificación */
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+            backdrop-filter: blur(3px);
+        }
+
+        .notification-overlay.active {
+            display: flex;
+            animation: fadeInOverlay 0.4s ease-in-out;
+        }
+
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .notification-modal {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            border-radius: 12px;
+            padding: 40px 35px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+            animation: slideUpModal 0.5s ease-out;
+            text-align: center;
+            position: relative;
+        }
+
+        @keyframes slideUpModal {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ce0db4;
+            animation: scaleIcon 0.6s ease-out;
+        }
+
+        @keyframes scaleIcon {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .notification-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #44484c;
+            margin: 0 0 12px 0;
+            letter-spacing: 0.3px;
+        }
+
+        .notification-date {
+            font-size: 14px;
+            color: #7a7e82;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .notification-message {
+            font-size: 15px;
+            color: #555555;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            letter-spacing: 0.2px;
+        }
+
+        .notification-button {
+            background: linear-gradient(135deg, #44484c 0%, #2a2d30 100%);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(68, 72, 76, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .notification-button:hover {
+            background: linear-gradient(135deg, #2a2d30 0%, #1a1d20 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(68, 72, 76, 0.3);
+        }
+
+        .notification-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .notification-modal {
+                padding: 30px 25px;
+                max-width: 85%;
+            }
+
+            .notification-title {
+                font-size: 19px;
+            }
+
+            .notification-message {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -563,10 +696,55 @@
         <button id="next-btn" style="position: absolute; right: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#777777; display:none;">&#10095;</button>
     </div>
 
+    <!-- Pop-up de notificación de actualización -->
+    <div id="notificationOverlay" class="notification-overlay">
+        <div class="notification-modal">
+            <div class="notification-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h2 class="notification-title">Actualización de Catálogo</h2>
+            <div class="notification-date">
+                <i class="fas fa-calendar-days" style="margin-right: 8px; color: #ce0db4;"></i>Disponible hasta el 31 de Marzo, 2026
+            </div>
+            <p class="notification-message">
+                Estamos trabajando en mejorar su experiencia de compra. Este catálogo dejará de estar disponible el 31 de marzo de 2026 para implementar una propuesta superior.
+                <br><br>
+                <strong>Contacte con su administrador</strong> para obtener información adicional sobre esta transición y acceso a nuestras nuevas soluciones.
+            </p>
+            <button class="notification-button" onclick="closeNotification()">Entendido</button>
+        </div>
+    </div>
+
     <!-- Pie de página -->
     <footer style="text-align: center; padding: 20px; margin-top: 40px; background-color: var(--color-card); color: var(--color-text-light); font-size: 14px; border-top: 1px solid var(--color-border);">
         <p style="margin: 0;">© Catálogo <span id="footer-catalog-name"></span> 2025 - v1.12</p>
+        <p id="footer-creation-date" style="margin: 5px 0 0 0; font-size: 12px; color: var(--color-text-light);"></p>
     </footer>
+
+    <script>
+        // Función para mostrar el pop-up automáticamente al abrir la página
+        function showNotification() {
+            const overlay = document.getElementById('notificationOverlay');
+            if (overlay) {
+                overlay.classList.add('active');
+            }
+        }
+
+        // Función para cerrar el pop-up
+        function closeNotification() {
+            const overlay = document.getElementById('notificationOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Mostrar el pop-up cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showNotification);
+        } else {
+            showNotification();
+        }
+    </script>
 
 </body>
 </html>
