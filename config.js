@@ -1,5 +1,1 @@
-  const G_S_CONFIG = {
-    API_KEY: "AIzaSyD9h4SH9laGhvh-NRhDjYgbCThVEbM8HTo",
-    SPREADSHEET_ID: "10QcnEi_INRU6Fn0UbdluXQC5KrU3JptMx5Y2ODF8OPg",
-    RANGO: "Lista!A2:Z"
-  };
+const _0x20b859=_0x3642;function _0xc3a6(){let $=["3878HViqfe","6889362AzhunM","Lista!A2:Z","81UBSXcS","3198395nhHdtZ","25315345FIHcKg","AIzaSyCLRUk_7BRg4TxtcrFYzsV7opqMlqeXD3s","657qlBppl","197900pvkhfb","2697317CLdOld","10QcnEi_INRU6Fn0UbdluXQC5KrU3JptMx5Y2ODF8OPg","5436BmwCkt","10LueCco","7976dQUMTZ"];return(_0xc3a6=function(){return $})()}function _0x3642($,x){$-=259;let _=_0xc3a6();return _[$]}!function($,x){let _=_0x3642,t=$();for(;;)try{let c=-parseInt(_(270))/1*(-parseInt(_(263))/2)+-parseInt(_(266))/3*(parseInt(_(271))/4)+parseInt(_(267))/5+-parseInt(_(264))/6+-parseInt(_(272))/7+parseInt(_(262))/8*(-parseInt(_(260))/9)+parseInt(_(261))/10*(parseInt(_(268))/11);if(743426===c)break;t.push(t.shift())}catch(n){t.push(t.shift())}}(_0xc3a6,743426);const G_S_CONFIG={API_KEY:_0x20b859(269),SPREADSHEET_ID:_0x20b859(259),RANGO:_0x20b859(265)};
