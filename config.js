@@ -1,0 +1,5 @@
+  const G_S_CONFIG = {
+    API_KEY: "AIzaSyD9h4SH9laGhvh-NRhDjYgbCThVEbM8HTo",
+    SPREADSHEET_ID: "10QcnEi_INRU6Fn0UbdluXQC5KrU3JptMx5Y2ODF8OPg",
+    RANGO: "Lista!A2:Z"
+  };

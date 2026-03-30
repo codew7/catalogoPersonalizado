@@ -11,8 +11,28 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="configm.js"></script>
-    <script src="indexm.js" defer></script>
+    <script>
+        // Aplicar tema visual según parámetro ?s= de la URL
+        (function() {
+            var s = new URLSearchParams(window.location.search).get('s');
+            if (s && ['2','3','4','5','6'].indexOf(s) !== -1) {
+                document.documentElement.className = 'theme-' + s;
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.body.classList.add('theme-' + s);
+                });
+            }
+        })();
+    </script>
+    <script>
+        // Bloquear carga del catálogo si no hay v=2
+        window.__catalogBlocked = new URLSearchParams(window.location.search).get('v') !== '2';
+    </script>
+    <script src="config.js"></script>
+    <script>
+        if (!window.__catalogBlocked) {
+            document.write('<script src="index.js" defer><\/script>');
+        }
+    </script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L3QLH6MHDX"></script>
@@ -39,74 +59,167 @@
             --color-border: #cccccc;
         }
 
-@media (max-width: 600px) {
-    .header-content-mobile {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -90%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 5;
-        width: 90%;
-    }
-    .header-content-mobile .mayorista-text {
-    font-size: 45px !important;
-    margin: 0 !important;
-    text-align: center !important;
-    font-weight: 700;
-    background: linear-gradient(90deg, #c3c5c7, #f8f8f8);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: mayorista-gradient 6s ease-in-out infinite;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    }
-    .header-content-desktop {
-        display: none !important;
-    }
-}
+        /* ===== HEADER ===== */
+        .site-header {
+            width: 92%;
+            max-width: 1200px;
+            margin: 12px auto 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #44484c 0%, #2a2d30 50%, #44484c 100%);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        }
 
-@media (min-width: 601px) {
-    .header-content-mobile {
-        display: none !important;
-    }
-    .header-content-desktop {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -55%);
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-    .header-content-desktop .mayorista-text {
-    font-size: 50px;
-    margin: 0;
-    text-align: center;
-    font-weight: 700;
-    background: linear-gradient(90deg, #c3c5c7, #f8f8f8);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: mayorista-gradient 6s ease-in-out infinite;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
-@keyframes mayorista-gradient {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
-    }
-}
-        
+        .header-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(270deg, #44484c, #b50b9e, #44484c);
+            background-size: 600% 600%;
+            animation: header-gradient 8s ease-in-out infinite;
+            opacity: 0.9;
+        }
+
+        @keyframes header-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Partículas decorativas */
+        .header-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .header-particles span {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: float-particle 6s ease-in-out infinite;
+        }
+
+        .header-particles span:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; animation-duration: 5s; }
+        .header-particles span:nth-child(2) { left: 25%; top: 60%; animation-delay: 1s; animation-duration: 7s; }
+        .header-particles span:nth-child(3) { left: 45%; top: 30%; animation-delay: 2s; animation-duration: 6s; }
+        .header-particles span:nth-child(4) { left: 65%; top: 70%; animation-delay: 0.5s; animation-duration: 8s; }
+        .header-particles span:nth-child(5) { left: 80%; top: 25%; animation-delay: 1.5s; animation-duration: 5.5s; }
+        .header-particles span:nth-child(6) { left: 90%; top: 55%; animation-delay: 3s; animation-duration: 6.5s; }
+
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-15px) scale(1.5); opacity: 0.5; }
+        }
+
+        /* Líneas decorativas laterales */
+        .header-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .header-lines::before,
+        .header-lines::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: line-pulse 3s ease-in-out infinite;
+        }
+
+        .header-lines::before { left: 16px; }
+        .header-lines::after { right: 16px; }
+
+        @keyframes line-pulse {
+            0%, 100% { opacity: 0.3; width: 60px; }
+            50% { opacity: 0.7; width: 80px; }
+        }
+
+        /* Ondas SVG */
+        .header-wave-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 40px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        /* Contenido del header */
+        .header-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 20px 36px;
+            min-height: 90px;
+        }
+
+        .catalog-title {
+            font-size: clamp(32px, 8vw, 52px);
+            font-weight: 800;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 2px;
+            line-height: 1.3;
+            background: linear-gradient(90deg, #e0e0e0, #ffffff, #e0e0e0);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: title-shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes title-shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glow sutil detrás del texto */
+        .title-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(181, 11, 158, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: glow-breathe 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes glow-breathe {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+        }
+
+        /* Borde inferior luminoso */
+        .header-bottom-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #b50b9e 30%, #ce0db4 50%, #b50b9e 70%, transparent 100%);
+            animation: bottom-line-slide 3s ease-in-out infinite;
+        }
+
+        @keyframes bottom-line-slide {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
@@ -114,25 +227,6 @@
             background-color: var(--color-background);
             color: var(--color-text);
             line-height: 1.6;
-        }
-
-        header { 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            background-color: var(--color-card);
-            color: var(--color-primary);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-            animation: header-move 3s ease-in-out infinite alternate;
-@keyframes header-move {
-    0% { box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(0); }
-    50% { box-shadow: 0 8px 24px rgba(0,0,0,0.12); transform: translateY(4px); }
-    100% { box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(0); }
-}
         }
 
         header h1 {
@@ -473,188 +567,476 @@
           line-height: 1.5;
         }
 
-        /* Estilos para el modal de notificación */
-        .notification-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 4000;
-            backdrop-filter: blur(3px);
+        /* ============================================ */
+        /* TEMA 2 - Rosado Suave                        */
+        /* ============================================ */
+        body.theme-2 {
+            background-color: #fdf2f8;
+            color: #4a1942;
+        }
+        body.theme-2 .site-header {
+            background: linear-gradient(135deg, #9d174d 0%, #7a1240 50%, #9d174d 100%);
+        }
+        body.theme-2 .header-bg {
+            background: linear-gradient(270deg, #9d174d, #ec4899, #9d174d);
+            background-size: 600% 600%;
+        }
+        body.theme-2 .catalog-title {
+            background: linear-gradient(90deg, #fbcfe8, #ffffff, #fbcfe8);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        body.theme-2 .title-glow {
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
+        }
+        body.theme-2 .header-bottom-line {
+            background: linear-gradient(90deg, transparent 0%, #ec4899 30%, #f472b6 50%, #ec4899 70%, transparent 100%);
+        }
+        body.theme-2 .header-wave path {
+            stroke: rgba(236, 72, 153, 0.35) !important;
+        }
+        body.theme-2 .card {
+            background-color: #ffffff;
+            border: 1px solid #f9a8d4;
+            box-shadow: 0 2px 8px rgba(157, 23, 77, 0.06);
+        }
+        body.theme-2 .card h3 {
+            color: #9d174d;
+        }
+        body.theme-2 .card .info {
+            color: #a0607e;
+        }
+        body.theme-2 select,
+        body.theme-2 input {
+            background-color: #fff;
+            color: #4a1942;
+            border-color: #f9a8d4;
+        }
+        body.theme-2 button {
+            background-color: #ec4899;
+            color: #fff;
+        }
+        body.theme-2 button:hover {
+            background-color: #db2777;
+        }
+        body.theme-2 .pagination-button {
+            background-color: #9d174d;
+            border-color: #f9a8d4;
+            color: #fff;
+        }
+        body.theme-2 .pagination-button:hover,
+        body.theme-2 .pagination-button.active {
+            background-color: #ec4899;
+            color: #fff;
+        }
+        body.theme-2 footer {
+            background-color: #fce7f3 !important;
+            color: #a0607e !important;
+            border-top-color: #f9a8d4 !important;
+        }
+        body.theme-2 .loading-spinner {
+            border-top-color: #ec4899;
+        }
+        body.theme-2 .loading-text {
+            color: #9d174d;
+        }
+        body.theme-2 .loading-subtext {
+            color: #a0607e;
         }
 
-        .notification-overlay.active {
-            display: flex;
-            animation: fadeInOverlay 0.4s ease-in-out;
+        /* ============================================ */
+        /* TEMA 3 - Azul Profesional                    */
+        /* ============================================ */
+        body.theme-3 {
+            background-color: #eef2f7;
+            color: #2c3e50;
         }
-
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        body.theme-3 .site-header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #152a45 50%, #1e3a5f 100%);
         }
-
-        .notification-modal {
-            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
-            border-radius: 12px;
-            padding: 40px 35px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e0e0e0;
-            animation: slideUpModal 0.5s ease-out;
-            text-align: center;
-            position: relative;
+        body.theme-3 .header-bg {
+            background: linear-gradient(270deg, #1e3a5f, #4a90d9, #1e3a5f);
+            background-size: 600% 600%;
         }
-
-        @keyframes slideUpModal {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        body.theme-3 .catalog-title {
+            background: linear-gradient(90deg, #a8d0f0, #ffffff, #a8d0f0);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
         }
-
-        .notification-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #ce0db4;
-            animation: scaleIcon 0.6s ease-out;
+        body.theme-3 .title-glow {
+            background: radial-gradient(circle, rgba(74, 144, 217, 0.25) 0%, transparent 70%);
         }
-
-        @keyframes scaleIcon {
-            from {
-                transform: scale(0.7);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        body.theme-3 .header-bottom-line {
+            background: linear-gradient(90deg, transparent 0%, #4a90d9 30%, #6aadee 50%, #4a90d9 70%, transparent 100%);
         }
-
-        .notification-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #44484c;
-            margin: 0 0 12px 0;
-            letter-spacing: 0.3px;
+        body.theme-3 .header-wave path {
+            stroke: rgba(74, 144, 217, 0.35) !important;
         }
-
-        .notification-date {
-            font-size: 14px;
-            color: #7a7e82;
-            margin-bottom: 20px;
-            font-weight: 500;
+        body.theme-3 .card {
+            background-color: #ffffff;
+            border: 1px solid #c8d8e8;
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.08);
         }
-
-        .notification-message {
-            font-size: 15px;
-            color: #555555;
-            line-height: 1.7;
-            margin-bottom: 28px;
-            letter-spacing: 0.2px;
+        body.theme-3 .card h3 {
+            color: #1e3a5f;
         }
-
-        .notification-button {
-            background: linear-gradient(135deg, #44484c 0%, #2a2d30 100%);
+        body.theme-3 select,
+        body.theme-3 input {
+            background-color: #fff;
+            border-color: #b8cce0;
+            color: #2c3e50;
+        }
+        body.theme-3 button {
+            background-color: #4a90d9;
             color: white;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: 600;
+        }
+        body.theme-3 button:hover {
+            background-color: #3a7bc4;
+        }
+        body.theme-3 .pagination-button {
+            background-color: #1e3a5f;
+            border-color: #c8d8e8;
+        }
+        body.theme-3 .pagination-button:hover,
+        body.theme-3 .pagination-button.active {
+            background-color: #4a90d9;
+            color: white;
+        }
+        body.theme-3 footer {
+            background-color: #dce6f0 !important;
+            color: #6a8099 !important;
+            border-top-color: #c8d8e8 !important;
+        }
+        body.theme-3 .loading-spinner {
+            border-top-color: #4a90d9;
+        }
+
+        /* ============================================ */
+        /* TEMA 4 - Verde Natural                       */
+        /* ============================================ */
+        body.theme-4 {
+            background-color: #f0f4e8;
+            color: #3a3e2e;
+        }
+        body.theme-4 .site-header {
+            background: linear-gradient(135deg, #2d5016 0%, #1e3a0e 50%, #2d5016 100%);
+        }
+        body.theme-4 .header-bg {
+            background: linear-gradient(270deg, #2d5016, #6b8f3c, #2d5016);
+            background-size: 600% 600%;
+        }
+        body.theme-4 .catalog-title {
+            background: linear-gradient(90deg, #b8d68c, #f0f8e0, #b8d68c);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        body.theme-4 .title-glow {
+            background: radial-gradient(circle, rgba(107, 143, 60, 0.25) 0%, transparent 70%);
+        }
+        body.theme-4 .header-bottom-line {
+            background: linear-gradient(90deg, transparent 0%, #6b8f3c 30%, #7da84a 50%, #6b8f3c 70%, transparent 100%);
+        }
+        body.theme-4 .header-wave path {
+            stroke: rgba(107, 143, 60, 0.35) !important;
+        }
+        body.theme-4 .card {
+            background-color: #ffffff;
+            border: 1px solid #c5d4a8;
+            box-shadow: 0 2px 8px rgba(45, 80, 22, 0.08);
+        }
+        body.theme-4 .card h3 {
+            color: #2d5016;
+        }
+        body.theme-4 select,
+        body.theme-4 input {
+            background-color: #fafcf5;
+            border-color: #b8c9a0;
+            color: #3a3e2e;
+        }
+        body.theme-4 button {
+            background-color: #6b8f3c;
+            color: white;
+        }
+        body.theme-4 button:hover {
+            background-color: #5a7a30;
+        }
+        body.theme-4 .pagination-button {
+            background-color: #2d5016;
+            border-color: #c5d4a8;
+        }
+        body.theme-4 .pagination-button:hover,
+        body.theme-4 .pagination-button.active {
+            background-color: #6b8f3c;
+            color: white;
+        }
+        body.theme-4 footer {
+            background-color: #e0e8d4 !important;
+            color: #6a7058 !important;
+            border-top-color: #c5d4a8 !important;
+        }
+        body.theme-4 .loading-spinner {
+            border-top-color: #6b8f3c;
+        }
+
+        /* ============================================ */
+        /* TEMA 5 - Cálido (terracota y crema)          */
+        /* ============================================ */
+        body.theme-5 {
+            background-color: #fdf6ee;
+            color: #4a3728;
+        }
+        body.theme-5 .site-header {
+            background: linear-gradient(135deg, #5c2e0e 0%, #3d1d08 50%, #5c2e0e 100%);
+        }
+        body.theme-5 .header-bg {
+            background: linear-gradient(270deg, #8b4513, #d2691e, #8b4513);
+            background-size: 600% 600%;
+        }
+        body.theme-5 .catalog-title {
+            background: linear-gradient(90deg, #f4d9b0, #fff5e6, #f4d9b0);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        body.theme-5 .title-glow {
+            background: radial-gradient(circle, rgba(210, 105, 30, 0.25) 0%, transparent 70%);
+        }
+        body.theme-5 .header-bottom-line {
+            background: linear-gradient(90deg, transparent 0%, #d2691e 30%, #e07a30 50%, #d2691e 70%, transparent 100%);
+        }
+        body.theme-5 .header-wave path {
+            stroke: rgba(210, 105, 30, 0.35) !important;
+        }
+        body.theme-5 .card {
+            background-color: #fff8f0;
+            border: 1px solid #e0c9a6;
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.08);
+        }
+        body.theme-5 .card h3 {
+            color: #6b3a1f;
+        }
+        body.theme-5 .card .info {
+            color: #8a6d52;
+        }
+        body.theme-5 select,
+        body.theme-5 input {
+            background-color: #fff8f0;
+            border-color: #dcc4a0;
+            color: #4a3728;
+        }
+        body.theme-5 button {
+            background-color: #d2691e;
+            color: #fff;
+        }
+        body.theme-5 button:hover {
+            background-color: #b85a18;
+        }
+        body.theme-5 .pagination-button {
+            background-color: #8b4513;
+            border-color: #e0c9a6;
+            color: #fff;
+        }
+        body.theme-5 .pagination-button:hover,
+        body.theme-5 .pagination-button.active {
+            background-color: #d2691e;
+            color: #fff;
+        }
+        body.theme-5 footer {
+            background-color: #f5e6d0 !important;
+            color: #8a6d52 !important;
+            border-top-color: #e0c9a6 !important;
+        }
+        body.theme-5 .loading-spinner {
+            border-top-color: #d2691e;
+        }
+        body.theme-5 .loading-text {
+            color: #6b3a1f;
+        }
+        body.theme-5 .loading-subtext {
+            color: #8a6d52;
+        }
+
+        /* ============================================ */
+        /* TEMA 6 - Nocturno (violeta y neón)           */
+        /* ============================================ */
+        body.theme-6 {
+            background-color: #0d0d1a;
+            color: #d4d0e8;
+        }
+        body.theme-6 .site-header {
+            background: linear-gradient(135deg, #1a0a2e 0%, #0d0518 50%, #1a0a2e 100%);
+        }
+        body.theme-6 .header-bg {
+            background: linear-gradient(270deg, #1a0a2e, #8b5cf6, #1a0a2e);
+            background-size: 600% 600%;
+        }
+        body.theme-6 .catalog-title {
+            background: linear-gradient(90deg, #c084fc, #e0b0ff, #c084fc);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        body.theme-6 .title-glow {
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+        }
+        body.theme-6 .header-bottom-line {
+            background: linear-gradient(90deg, transparent 0%, #8b5cf6 30%, #a78bfa 50%, #8b5cf6 70%, transparent 100%);
+        }
+        body.theme-6 .header-wave path {
+            stroke: rgba(139, 92, 246, 0.35) !important;
+        }
+        body.theme-6 .card {
+            background-color: #1a1a2e;
+            border: 1px solid #2d2b55;
+            color: #d4d0e8;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.08);
+        }
+        body.theme-6 .card h3 {
+            color: #c084fc;
+        }
+        body.theme-6 .card .info {
+            color: #9b95b8;
+        }
+        body.theme-6 select,
+        body.theme-6 input {
+            background-color: #1a1a2e;
+            color: #d4d0e8;
+            border-color: #2d2b55;
+        }
+        body.theme-6 button {
+            background-color: #8b5cf6;
+            color: #fff;
+        }
+        body.theme-6 button:hover {
+            background-color: #7c3aed;
+        }
+        body.theme-6 .pagination-button {
+            background-color: #1a1a2e;
+            border-color: #2d2b55;
+            color: #d4d0e8;
+        }
+        body.theme-6 .pagination-button:hover,
+        body.theme-6 .pagination-button.active {
+            background-color: #8b5cf6;
+            color: #fff;
+        }
+        body.theme-6 footer {
+            background-color: #1a0a2e !important;
+            color: #7a70a0 !important;
+            border-top-color: #2d2b55 !important;
+        }
+        body.theme-6 #loadingOverlay {
+            background: rgba(13, 13, 26, 0.95);
+        }
+        body.theme-6 .loading-text {
+            color: #c084fc;
+        }
+        body.theme-6 .loading-subtext {
+            color: #9b95b8;
+        }
+        body.theme-6 .loading-spinner {
+            border-top-color: #8b5cf6;
+        }
+
+        /* WhatsApp floating button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2000;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #25d366;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.4);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(68, 72, 76, 0.2);
-            letter-spacing: 0.5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            padding: 14px;
         }
-
-        .notification-button:hover {
-            background: linear-gradient(135deg, #2a2d30 0%, #1a1d20 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(68, 72, 76, 0.3);
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.5);
         }
-
-        .notification-button:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 600px) {
-            .notification-modal {
-                padding: 30px 25px;
-                max-width: 85%;
-            }
-
-            .notification-title {
-                font-size: 19px;
-            }
-
-            .notification-message {
-                font-size: 14px;
-            }
+        .whatsapp-float svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
         }
     </style>
 </head>
 
 <body>
 
-<header style="display: flex; flex-direction: column; align-items: center; padding: 5px; background-color: #44484c; width: 90%; margin: 0 auto; border-radius: 10px;">
-    <div style="position: relative; width: 100%; min-height: 100px; display: flex; align-items: center; justify-content: center; background: linear-gradient(270deg, #44484c, #b50b9e, #44484c); background-size: 600% 600%; animation: header-gradient 8s ease-in-out infinite; border-radius: 10px;">
-        <!-- Superposición: animación y texto centrados -->
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -70%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-            <svg class="header-wave" style="position:absolute;top:70%;left:50%;transform:translate(-50%,-50%);width:80%;height:80px;z-index:0;pointer-events:none;" viewBox="0 0 400 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 30 Q100 60 200 30 T400 30" stroke="#b50b9e" stroke-width="2" fill="none">
-                    <animate attributeName="d" dur="3s" repeatCount="indefinite"
-                        values="M0 30 Q100 60 200 30 T400 30; M0 35 Q100 55 200 35 T400 35; M0 30 Q100 60 200 30 T400 30" />
-                </path>
-            </svg>
-            <!-- Segunda onda SVG animada -->
-            <svg class="header-wave" style="position:absolute;top:90%;left:50%;transform:translate(-50%,-60%);width:80%;height:40px;z-index:0;pointer-events:none;" viewBox="0 0 400 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 20 Q100 40 200 20 T400 20" stroke="#ce0db4" stroke-width="2" fill="none">
-                    <animate attributeName="d" dur="2.5s" repeatCount="indefinite"
-                        values="M0 20 Q100 40 200 20 T400 20; M0 25 Q100 35 200 25 T400 25; M0 20 Q100 40 200 20 T400 20" />
-                </path>
-            </svg>
-            <div style="position: relative; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index:1;">
-                <div class="header-content-mobile">
-                    <div class="mayorista-text pulse-text">Catalogo</div>
-                </div>
-                <div class="header-content-desktop">
-                    <div class="mayorista-text pulse-text">Catalogo</div>
-                    
-            @keyframes header-gradient {
-                0% {background-position: 0% 50%;}
-                50% {background-position: 100% 50%;}
-                100% {background-position: 0% 50%;}
-            }
-
-            .pulse-text {
-                animation: pulse 1.8s infinite;
-            }
-            
-            @keyframes pulse {
-                0% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
-                50% { text-shadow: 0 0 24px #ce0db4, 0 0 8px #fff; }
-                100% { text-shadow: 0 0 8px #b50b9e, 0 0 2px #fff; }
-            }
-                </div>
-            </div>
+<!-- Validación de versión: si no es v=2, mostrar mensaje de catálogo no disponible -->
+<div id="catalog-unavailable" style="display:none; min-height:100vh; background:linear-gradient(135deg,#f5f7fa 0%,#e4e8ec 100%); align-items:center; justify-content:center; font-family:'Inter','Segoe UI',Arial,sans-serif;">
+    <div style="text-align:center; max-width:480px; padding:48px 32px; background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,0.10); margin:24px;">
+        <div style="margin-bottom:24px;">
+            <i class="fa-solid fa-circle-exclamation" style="font-size:56px; color:#e74c3c; opacity:0.85;"></i>
         </div>
-        <div style="display: flex; width: 100%; justify-content: center; align-items: center; margin-top: 10px; position: relative; gap: 10px; z-index:2;">
+        <h1 style="font-size:22px; font-weight:700; color:#2c3e50; margin:0 0 12px;">Catálogo no disponible</h1>
+        <p style="font-size:15px; color:#5a6a7a; line-height:1.6; margin:0 0 24px;">
+            Este enlace de catálogo ya no se encuentra activo o ha expirado.
+            <br>Para obtener un enlace actualizado, por favor contacte al propietario o administrador.
+        </p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; color:#7f8c9b; font-size:13px;">
+            <i class="fa-solid fa-envelope" style="color:#3498db;"></i>
+            <span>Comuníquese con quien le compartió este catálogo</span>
+        </div>
+        <div style="margin-top:28px; padding-top:20px; border-top:1px solid #eef1f5; font-size:12px; color:#aab4c0;">
+            <i class="fa-solid fa-lock" style="margin-right:4px;"></i> Acceso restringido &nbsp;·&nbsp; Gracias por su comprensión
         </div>
     </div>
+</div>
+
+<script>
+(function() {
+    var v = new URLSearchParams(window.location.search).get('v');
+    if (v !== '2') {
+        document.getElementById('catalog-unavailable').style.display = 'flex';
+        // Ocultar todo el contenido del catálogo
+        document.addEventListener('DOMContentLoaded', function() {
+            var body = document.body;
+            for (var i = 0; i < body.children.length; i++) {
+                if (body.children[i].id !== 'catalog-unavailable') {
+                    body.children[i].style.display = 'none';
+                }
+            }
+        });
+    }
+})();
+</script>
+
+<header class="site-header">
+    <div class="header-bg"></div>
+    <div class="header-particles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+    </div>
+    <div class="header-lines"></div>
+    <div class="header-wave-container">
+        <svg class="header-wave" width="100%" height="40" viewBox="0 0 400 40" fill="none" preserveAspectRatio="none">
+            <path d="M0 20 Q100 38 200 20 T400 20" stroke="rgba(206,13,180,0.35)" stroke-width="1.5" fill="none">
+                <animate attributeName="d" dur="3s" repeatCount="indefinite"
+                    values="M0 20 Q100 38 200 20 T400 20;M0 24 Q100 32 200 24 T400 24;M0 20 Q100 38 200 20 T400 20" />
+            </path>
+            <path d="M0 28 Q100 12 200 28 T400 28" stroke="rgba(181,11,158,0.25)" stroke-width="1" fill="none">
+                <animate attributeName="d" dur="4s" repeatCount="indefinite"
+                    values="M0 28 Q100 12 200 28 T400 28;M0 24 Q100 16 200 24 T400 24;M0 28 Q100 12 200 28 T400 28" />
+            </path>
+        </svg>
+    </div>
+    <div class="header-inner">
+        <div class="title-glow"></div>
+        <h1 class="catalog-title" id="catalog-title">Catálogo</h1>
+    </div>
+    <div class="header-bottom-line"></div>
 </header>
 
     <!-- Overlay de carga profesional -->
@@ -696,55 +1078,25 @@
         <button id="next-btn" style="position: absolute; right: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#777777; display:none;">&#10095;</button>
     </div>
 
-    <!-- Pop-up de notificación de actualización -->
-    <div id="notificationOverlay" class="notification-overlay">
-        <div class="notification-modal">
-            <div class="notification-icon">
-                <i class="fas fa-bell"></i>
-            </div>
-            <h2 class="notification-title">Actualización de Catálogo</h2>
-            <div class="notification-date">
-                <i class="fas fa-calendar-days" style="margin-right: 8px; color: #ce0db4;"></i>Disponible hasta el 31 de Marzo, 2026
-            </div>
-            <p class="notification-message">
-                Estamos trabajando en mejorar su experiencia de compra. Este catálogo dejará de estar disponible el 31 de marzo de 2026 para implementar una propuesta superior.
-                <br><br>
-                <strong>Contacte con su administrador</strong> para obtener información adicional sobre esta transición y acceso a nuestras nuevas soluciones.
-            </p>
-            <button class="notification-button" onclick="closeNotification()">Entendido</button>
-        </div>
-    </div>
-
     <!-- Pie de página -->
-    <footer style="text-align: center; padding: 20px; margin-top: 40px; background-color: var(--color-card); color: var(--color-text-light); font-size: 14px; border-top: 1px solid var(--color-border);">
-        <p style="margin: 0;">© Catálogo <span id="footer-catalog-name"></span> 2025 - v1.12</p>
-        <p id="footer-creation-date" style="margin: 5px 0 0 0; font-size: 12px; color: var(--color-text-light);"></p>
-    </footer>
-
+    <!-- WhatsApp floating button -->
+    <a id="whatsapp-btn" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 0C7.165 0 .003 7.16.001 15.997c-.001 2.818.736 5.571 2.137 7.998L0 32l8.19-2.147a15.95 15.95 0 007.808 1.99h.007C24.838 31.843 32 24.68 32 15.998 32 7.162 24.842 0 16.004 0zm0 29.29a13.27 13.27 0 01-6.77-1.853l-.486-.288-5.032 1.32 1.343-4.907-.317-.503A13.23 13.23 0 012.55 15.997C2.551 8.58 8.584 2.55 16.004 2.55c3.593 0 6.97 1.4 9.51 3.942a13.38 13.38 0 013.936 9.51c-.002 7.418-6.034 13.288-13.446 13.288zm7.38-9.948c-.404-.203-2.393-1.18-2.764-1.316-.371-.135-.641-.203-.911.203-.27.406-1.047 1.316-1.284 1.588-.236.27-.473.304-.877.101-.405-.202-1.71-.63-3.257-2.01-1.203-1.073-2.016-2.399-2.252-2.803-.236-.405-.025-.624.178-.826.182-.182.405-.473.607-.71.203-.236.27-.405.405-.675.135-.27.068-.507-.034-.71-.101-.202-.91-2.195-1.248-3.006-.328-.789-.662-.682-.91-.695-.236-.012-.507-.014-.777-.014s-.71.101-1.081.507c-.371.405-1.418 1.385-1.418 3.378s1.452 3.919 1.655 4.19c.202.27 2.86 4.366 6.928 6.124.968.418 1.723.667 2.312.854.972.309 1.856.265 2.554.16.779-.116 2.393-.978 2.731-1.922.338-.945.338-1.754.236-1.922-.101-.169-.371-.27-.776-.473z"/></svg>
+    </a>
     <script>
-        // Función para mostrar el pop-up automáticamente al abrir la página
-        function showNotification() {
-            const overlay = document.getElementById('notificationOverlay');
-            if (overlay) {
-                overlay.classList.add('active');
+        (function() {
+            var phone = new URLSearchParams(window.location.search).get('t');
+            if (phone) {
+                var btn = document.getElementById('whatsapp-btn');
+                btn.href = 'https://wa.me/' + encodeURIComponent(phone);
+                btn.style.display = 'flex';
             }
-        }
-
-        // Función para cerrar el pop-up
-        function closeNotification() {
-            const overlay = document.getElementById('notificationOverlay');
-            if (overlay) {
-                overlay.classList.remove('active');
-            }
-        }
-
-        // Mostrar el pop-up cuando el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', showNotification);
-        } else {
-            showNotification();
-        }
+        })();
     </script>
+
+    <footer style="text-align: center; padding: 20px; margin-top: 40px; background-color: var(--color-card); color: var(--color-text-light); font-size: 14px; border-top: 1px solid var(--color-border);">
+        <p style="margin: 0;">© Catálogo <span id="footer-catalog-name"></span> 2026 - v2.01</p>
+    </footer>
 
 </body>
 </html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa</title>
+    <link rel="icon" href="faviconnegro.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .preview-banner {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            gap: 12px;
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+            z-index: 100;
+            position: relative;
+        }
+
+        .preview-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .preview-badge i {
+            font-size: 1.1rem;
+        }
+
+        .preview-dot {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: white;
+            color: #FF6B35;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: calc(100vh - 50px);
+            border: none;
+        }
+
+        @media (max-width: 500px) {
+            .preview-banner {
+                padding: 8px 12px;
+            }
+
+            .preview-badge {
+                font-size: 0.82rem;
+            }
+
+            .btn-back {
+                padding: 7px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="preview-banner">
+        <div class="preview-badge">
+            <div class="preview-dot"></div>
+            <i class="fas fa-eye"></i>
+            Vista Previa (así se verá tu catálogo final)
+        </div>
+        <div class="preview-actions">
+            <button class="btn-back" id="btnBack" onclick="window.close()">
+                <i class="fas fa-arrow-left"></i>
+                Volver a Editar
+            </button>
+        </div>
+    </div>
+
+    <iframe id="previewFrame" class="preview-frame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+
+    <script>
+        (function() {
+            var search = window.location.search;
+            var separator = search ? '&' : '?';
+            document.getElementById('previewFrame').src = 'index.html' + search + separator + 'preview=true';
+        })();
+    </script>
+
+</body>
+</html>
