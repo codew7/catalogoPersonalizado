@@ -1084,11 +1084,37 @@
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 0C7.165 0 .003 7.16.001 15.997c-.001 2.818.736 5.571 2.137 7.998L0 32l8.19-2.147a15.95 15.95 0 007.808 1.99h.007C24.838 31.843 32 24.68 32 15.998 32 7.162 24.842 0 16.004 0zm0 29.29a13.27 13.27 0 01-6.77-1.853l-.486-.288-5.032 1.32 1.343-4.907-.317-.503A13.23 13.23 0 012.55 15.997C2.551 8.58 8.584 2.55 16.004 2.55c3.593 0 6.97 1.4 9.51 3.942a13.38 13.38 0 013.936 9.51c-.002 7.418-6.034 13.288-13.446 13.288zm7.38-9.948c-.404-.203-2.393-1.18-2.764-1.316-.371-.135-.641-.203-.911.203-.27.406-1.047 1.316-1.284 1.588-.236.27-.473.304-.877.101-.405-.202-1.71-.63-3.257-2.01-1.203-1.073-2.016-2.399-2.252-2.803-.236-.405-.025-.624.178-.826.182-.182.405-.473.607-.71.203-.236.27-.405.405-.675.135-.27.068-.507-.034-.71-.101-.202-.91-2.195-1.248-3.006-.328-.789-.662-.682-.91-.695-.236-.012-.507-.014-.777-.014s-.71.101-1.081.507c-.371.405-1.418 1.385-1.418 3.378s1.452 3.919 1.655 4.19c.202.27 2.86 4.366 6.928 6.124.968.418 1.723.667 2.312.854.972.309 1.856.265 2.554.16.779-.116 2.393-.978 2.731-1.922.338-.945.338-1.754.236-1.922-.101-.169-.371-.27-.776-.473z"/></svg>
     </a>
     <script>
+        // Normaliza el teléfono al formato internacional que exige wa.me (solo dígitos).
+        // Números argentinos: 54 + 9 + característica sin 0 + número sin 15.
+        function normalizarTelefono(raw) {
+            var d = String(raw).replace(/\D/g, '');
+            if (d.indexOf('00') === 0) d = d.slice(2);
+            var nacional = d;
+            if (d.indexOf('54') === 0) {
+                nacional = d.slice(2);
+                if (nacional.charAt(0) === '9' && nacional.length === 11) return d;
+            }
+            if (nacional.charAt(0) === '0') nacional = nacional.slice(1);
+            if (!/^[123]/.test(nacional)) return d;
+            if (nacional.length === 12) {
+                // Quitar el "15" que sigue a la característica (2, 3 o 4 dígitos)
+                var inicios = nacional.indexOf('11') === 0 ? [2] : [3, 4];
+                for (var i = 0; i < inicios.length; i++) {
+                    if (nacional.substr(inicios[i], 2) === '15') {
+                        nacional = nacional.slice(0, inicios[i]) + nacional.slice(inicios[i] + 2);
+                        break;
+                    }
+                }
+            }
+            return nacional.length === 10 ? '549' + nacional : d;
+        }
+
         (function() {
             var phone = new URLSearchParams(window.location.search).get('t');
-            if (phone) {
+            var numero = phone ? normalizarTelefono(phone) : '';
+            if (numero) {
                 var btn = document.getElementById('whatsapp-btn');
-                btn.href = 'https://wa.me/' + encodeURIComponent(phone);
+                btn.href = 'https://wa.me/' + numero;
                 btn.style.display = 'flex';
             }
         })();
